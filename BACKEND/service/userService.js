@@ -1,7 +1,5 @@
-const { default: mongoose } = require('mongoose')
 const User = require('../models/users.js')
 const bcrypt = require('bcrypt')
-const { connectDB, closeDB } = require('../config/db.js')
 
 async function createUser({ name, email, password, role }) {
     const saltround = 10

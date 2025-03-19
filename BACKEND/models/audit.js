@@ -1,9 +1,9 @@
 const mongoose = require('mongoose')
 
-const auditSchema = new mongoose({
+const auditSchema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'user',
+        ref: 'User',
         required: true
     },
     auditype: {
@@ -26,9 +26,7 @@ const auditSchema = new mongoose({
     carbonFootprint: {
         type: Number, // Carbon emissions in kg CO₂
     },
-    recommendation: {
-        type: String, // Suggested optimizations for energy efficiency
-    },
+    recommendation: [String],
     status: {
         type: String,
         enum: ['pending', 'in progress', 'completed'],
