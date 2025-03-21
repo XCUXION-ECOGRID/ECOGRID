@@ -1,14 +1,15 @@
 const { createAudit, updateAudit, deleteAudit } = require("../service/auditService")
 const { closeDB, connectDB } = require("../config/db.js")
-/* const updateData = {
+
+const updateData = {
     auditype: "commercial",
     appliances: [
         { name: "Fan", powerRating: 75, usageHours: 5 },
         { name: "Light", powerRating: 10, usageHours: 6 }
     ]
-};
- */
-const auditData = {
+}
+
+/* const auditData = {
     user: "67da804d5ae65f1d774fc58e", // Replace with an actual ObjectId from your User collection
     auditype: "residential",
     appliances: [
@@ -24,7 +25,7 @@ const auditData = {
         "Consider using solar panels for energy efficiency"
     ]
 }
-
+ */
 
 async function testCreateAudit() {
     try {
@@ -43,7 +44,7 @@ async function testCreateAudit() {
 async function testUpdateAudit() {
     try {
         await connectDB()
-        await updateAudit("67da804d5ae65f1d774fc58e", updateData)
+        await updateAudit("67dad417662c7539c570f511", updateData)
     } catch (error) {
         console.log(error.message)
     } finally {
@@ -54,7 +55,7 @@ async function testUpdateAudit() {
 async function testDeleteAudit() {
     try {
         await connectDB()
-        await deleteAudit("67da804d5ae65f1d774fc58e")
+        await deleteAudit("67dab106cc879f97820996d0")
     } catch (error) {
         console.log(error.message)
     } finally {
@@ -62,6 +63,6 @@ async function testDeleteAudit() {
     }
 }
 
-testCreateAudit()
-//testUpdateAudit()
+//testCreateAudit()
+testUpdateAudit()
 //testDeleteAudit()

@@ -1,9 +1,9 @@
 const Audit = require('../models/audit.js')
 const mongoose = require('mongoose')
+const { totalConsumption } = require('../utils/Calculator.js')
 
 const ELECTRICITY_TARIFF = 0.12; // $ per kWh (Change based on location)
 const CARBON_EMISSION_FACTOR = 0.92; // kg CO₂ per kWh (Average global value)
-
 
 async function createAudit(auditData) {
     try {
@@ -13,23 +13,15 @@ async function createAudit(auditData) {
         }
 
         // Calculation of Consumption, Cost and Carbon foot print
-        let totalConsumption = 0
+        const caltotalConsumption = totalConsumption(auditData)
 
-        if (auditData.appliances && auditData.appliances.length > 0) {
+        const estimatedCost = caltotalConsumption * ELECTRICITY_TARIFF
 
-            totalConsumption = auditData.appliances.reduce((total, appliance) => {
-                let dailyComsumption = (appliance.powerRating * appliance.usageHours) / 1000
-                return total + dailyComsumption
-            }, 0)
-        }
-
-        const estimatedCost = totalConsumption * ELECTRICITY_TARIFF
-
-        const carbonFootprint = totalConsumption * CARBON_EMISSION_FACTOR
+        const carbonFootprint = caltotalConsumption * CARBON_EMISSION_FACTOR
 
         const audit = new Audit({
             ...auditData,
-            energyConsumption: totalConsumption,
+            energyConsumption: caltotalConsumption,
             estimatedCost,
             carbonFootprint
         })
@@ -54,23 +46,14 @@ async function updateAudit(auditID, updateData) {
         console.log(`Audit with ID ${auditID} not found`)
         return
     }
+    const caltotalConsumption = totalConsumption(updateData)
 
     //update only provided data
     Object.assign(audit, updateData)
 
-    let totalConsumption = 0
-
-    if (updateData.appliances && Array.isArray(updateData.appliances) && updateData.appliances.length > 0) {
-        totalConsumption = updateData.appliances.reduce((total, appliance) => {
-            let dailyComsumption = (appliance.powerRating * appliance.usageHours) / 1000
-
-            return total + dailyComsumption
-        }, 0)
-    }
-
-    audit.energyConsumption = totalConsumption
-    audit.estimatedCost = totalConsumption * ELECTRICITY_TARIFF
-    audit.carbonFootprint = totalConsumption * CARBON_EMISSION_FACTOR
+    audit.energyConsumption = caltotalConsumption
+    audit.estimatedCost = caltotalConsumption * ELECTRICITY_TARIFF
+    audit.carbonFootprint = caltotalConsumption * CARBON_EMISSION_FACTOR
 
     await audit.save()
     console.log(`Updates for ${auditID} saved successfully`)

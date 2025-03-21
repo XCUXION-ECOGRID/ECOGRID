@@ -115,9 +115,13 @@ This is the backend structure for the **Solar Audit App**, a system that facilit
 
 ---
 
+for the Controllers, I divide into the mobile and desktop
+
 ## 📌 Installation
 
 ```sh
 git clone https://github.com/your-repo/solar-audit-app-backend.git
 cd solar-audit-app-backend
 npm install
+
+
