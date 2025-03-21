@@ -1,5 +1,5 @@
 const { connectDB, closeDB } = require("../config/db");
-const { createSolarPackage, updateSolarPackage } = require("../service/solarPackageService.js")
+const { createSolarPackage, updateSolarPackage, deletePackage } = require("../service/solarPackageService.js")
 
 const testPackage = {
     name: "6kW Solar Home System",
@@ -42,6 +42,20 @@ async function testUpdateSolarPackage() {
     }
 }
 
+async function testDeleteSolarPackage() {
+    try {
+        await connectDB()
+
+        await deletePackage('67ddd0dfdd6d195013d4b56c')
+
+    } catch (error) {
+        console.log(error.message)
+    } finally {
+        await closeDB()
+    }
+}
+
 
 //testCreateSolarPackage()
-testUpdateSolarPackage()
+//testUpdateSolarPackage()
+//testDeleteSolarPackage()

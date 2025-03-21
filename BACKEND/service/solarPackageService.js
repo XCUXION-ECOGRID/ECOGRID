@@ -1,6 +1,13 @@
 const mongoose = require('mongoose')
 const SolarPackage = require('../models/solarPackage.js')
-const { applianceSupportCal, totalEstimatedCost } = require('../utils/Calculator.js')
+const { totalEstimatedCost } = require('../utils/Calculator.js')
+
+const checkValidID = (objectID) => {
+    if (!mongoose.Types.ObjectId.isValid(objectID)) {
+        console.log("Invalid Solar Package ID")
+        return
+    }
+}
 
 async function createSolarPackage(solarPackageData) {
     try {
@@ -40,10 +47,7 @@ async function createSolarPackage(solarPackageData) {
 
 async function updateSolarPackage(SolarPackageID, updateSolarPackageData) {
     try {
-        if (!mongoose.Types.ObjectId.isValid(SolarPackageID)) {
-            console.log("Invalid Solar Package ID")
-            return
-        }
+        checkValidID(SolarPackageID)
 
         const solarPackage = await SolarPackage.findById(SolarPackageID)
 
@@ -72,4 +76,15 @@ async function updateSolarPackage(SolarPackageID, updateSolarPackageData) {
     }
 }
 
-module.exports = { createSolarPackage, updateSolarPackage }
+async function deletePackage(solarPackageID) {
+    try {
+        checkValidID(solarPackageID)
+
+        const result = await SolarPackage.findByIdAndDelete(solarPackageID)
+        console.log(`Solar package ${result.name} deleted successfully`)
+    } catch (error) {
+        console.log(`Unable to delete Solar Package ${solarPackageID}`, error.message)
+    }
+}
+
+module.exports = { createSolarPackage, updateSolarPackage, deletePackage }
