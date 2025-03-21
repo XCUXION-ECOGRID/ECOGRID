@@ -9,22 +9,24 @@ const commonAppliances = [
 ];
 
 const applianceSupportCal = (solarPackageData) => {
-    const availableEnergy = (solarPackageData.capacity * 5) + solarPackageData.batteryStorage  // kWh (Assuming 5 peak sun hours)
-    let remainingEnergy = availableEnergy
-    let supportedAppliances = []
+    const availableEnergy = (solarPackageData.capacity * 5) + solarPackageData.batteryStorage; // kWh (Assuming 5 peak sun hours)
+    let remainingEnergy = availableEnergy;
+    let supportedAppliances = [];
 
-    const prioritizedAppliances = commonAppliances.slice().sort((a, b) => a.powerRating - b.powerRating);
+    const prioritizedAppliances = commonAppliances.sort((a, b) => a.powerRating - b.powerRating);
 
     for (let appliance of prioritizedAppliances) {
-        let dailyConsumption = (appliance.powerRating * appliance.usageHours) / 1000 // Convert to kWh
+        let dailyConsumption = (appliance.powerRating * appliance.usageHours) / 1000; // Convert to kWh
+        let maxCount = Math.floor(remainingEnergy / dailyConsumption)
 
-        if (dailyConsumption <= remainingEnergy && appliance.powerRating <= solarPackageData.inverterCapacity * 1000) {
-            let maxCount = Math.floor(remainingEnergy / dailyConsumption)
-
-            if (maxCount > 0) {
-                supportedAppliances.push({ ...appliance, count: maxCount })
-                remainingEnergy -= maxCount * dailyConsumption
-            }
+        if (dailyConsumption <= remainingEnergy && appliance.powerRating <= solarPackageData.inverterCapacity * 1000 && maxCount > 0) {
+            supportedAppliances.push({
+                name: appliance.name,
+                powerRating: appliance.powerRating,
+                usageHours: appliance.usageHours,
+                count: maxCount,  // Ensure the count is added here
+            });
+            remainingEnergy -= maxCount * dailyConsumption
         }
     }
 

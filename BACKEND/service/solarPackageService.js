@@ -10,19 +10,24 @@ async function createSolarPackage(solarPackageData) {
             return
         }
 
-        solarPackageData.name
+        const existingPackage = await SolarPackage.findOne({ name: solarPackageData.name })
+
+        if (existingPackage) {
+            console.log("This Package already exist")
+            return
+        }
 
         const calPanelCount = Math.ceil(solarPackageData.capacity / solarPackageData.panelPowerRating)
 
         const calEstimatedCost = totalEstimatedCost(solarPackageData, calPanelCount)
-        const supportedAppliances = applianceSupportCal(solarPackageData)
+        //const supportedAppliances = applianceSupportCal(solarPackageData)
 
         const solarPackage = new SolarPackage(
             {
                 ...solarPackageData,
                 panelCount: calPanelCount,
                 estimatedCost: calEstimatedCost,
-                appliancesSupported: supportedAppliances,
+                //appliancesSupported: supportedAppliances,
             }
         )
         await solarPackage.save()
@@ -33,4 +38,38 @@ async function createSolarPackage(solarPackageData) {
     }
 }
 
-module.exports = { createSolarPackage }
+async function updateSolarPackage(SolarPackageID, updateSolarPackageData) {
+    try {
+        if (!mongoose.Types.ObjectId.isValid(SolarPackageID)) {
+            console.log("Invalid Solar Package ID")
+            return
+        }
+
+        const solarPackage = await SolarPackage.findById(SolarPackageID)
+
+        if (!solarPackage) {
+            console.log(`SolarPackage with ${SolarPackageID} not found`)
+            return
+        }
+
+        Object.assign(solarPackage, updateSolarPackageData)
+
+        const calPanelCount = Math.ceil(updateSolarPackageData.capacity / updateSolarPackageData.panelPowerRating)
+        const calEstimatedCost = totalEstimatedCost(updateSolarPackageData, calPanelCount)
+        //const supportedAppliances = applianceSupportCal(updateSolarPackageData)
+
+        solarPackage.panelCount = calPanelCount
+        solarPackage.estimatedCost = calEstimatedCost
+        //solarPackage.appliancesSupported = supportedAppliances
+
+        console.log(solarPackage)
+
+        await solarPackage.save()
+        console.log(`Solar Package ${solarPackage.name} updated`)
+
+    } catch (error) {
+        console.log(`Solar Package ${SolarPackageID} was not updated successfully`, error.message)
+    }
+}
+
+module.exports = { createSolarPackage, updateSolarPackage }
