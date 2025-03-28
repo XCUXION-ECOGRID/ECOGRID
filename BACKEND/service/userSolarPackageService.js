@@ -13,14 +13,6 @@ async function createUserCustomPackage(userData) {
 
         const result = await estimateCustomCapacity(userData.appliance, userData.panelPowerRating)
 
-        console.log(result)
-
-        if (!result || isNaN(result.inverterCapacity) || isNaN(result.panelCount)) {
-            console.log("Error in estimating capacity: Invalid calculation result")
-            return
-        }
-
-
         const newUserPackage = new UserSolarPackage({
             ...userData,
             inverterCapacity: result.inverterCapacity,
@@ -34,5 +26,7 @@ async function createUserCustomPackage(userData) {
         console.log("Unable to create new Package", error.message)
     }
 }
+
+
 
 module.exports = { createUserCustomPackage }
