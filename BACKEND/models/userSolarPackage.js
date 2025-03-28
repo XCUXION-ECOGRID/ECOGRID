@@ -12,7 +12,6 @@ const userSolarPackageSchema = new mongoose.Schema({
     },
     capacity: { //simulate
         type: Number,
-        required: true,
         unique: true
     },
     batteryStorage: {
@@ -35,10 +34,6 @@ const userSolarPackageSchema = new mongoose.Schema({
         name: String,
         powerRating: Number // Watts per appliance //ai provided
     }],
-    recommendationCriteria: {
-        minEnergyConsumption: Number, // Minimum required energy consumption to recommend this package
-        maxEnergyConsumption: Number  // Maximum consumption it can handle
-    },
 }, { timestamps: true })
 
 module.exports = mongoose.model('UserSolarPackage', userSolarPackageSchema)

@@ -16,7 +16,7 @@ async function calCostCustomePackage(userPackage) {
 
     const pricing = await getPricing()
 
-    const { capacity, batteryStorage, inverterCapacity, panelCount, panelPowerRating } = userPackage
+    const { batteryStorage, inverterCapacity, panelCount } = userPackage
 
     const panelCost = panelCount * pricing.panelCostPerUnit;
     const batteryCost = batteryStorage * pricing.batteryCostPerKWh;
@@ -34,7 +34,7 @@ async function estimateCustomCapacity(appliances, panelPowerRating) {
     let totalDailyConsumption = 0
 
     appliances.forEach(appliance => {
-        totalDailyConsumption += (appliance.powerRating * appliance.userHours) / 1000
+        totalDailyConsumption += (appliance.powerRating * appliance.usageHours) / 1000
     });
 
     const solarPanelEfficiency = 0.2
@@ -48,7 +48,10 @@ async function estimateCustomCapacity(appliances, panelPowerRating) {
     const batteryStorage = ((totalDailyConsumption * DoA) / DoD).toFixed(2)
     const peakPowerUsage = appliances.reduce((total, appliance) => total + appliance.powerRating, 0)
     const inverterCapacity = (peakPowerUsage / (powerFactor * 1000)).toFixed(2)
+    const dailyConsumption = totalDailyConsumption.toFixed(2)
 
-    return { totalDailyConsumption, panelCount, batteryStorage, inverterCapacity }
+    return { dailyConsumption, panelCount, batteryStorage, inverterCapacity }
 }
+
+module.exports = { estimateCustomCapacity }
 
