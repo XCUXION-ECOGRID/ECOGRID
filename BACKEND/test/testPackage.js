@@ -2,11 +2,11 @@ const { connectDB, closeDB } = require("../config/db");
 const { createSolarPackage, updateSolarPackage, deletePackage } = require("../service/solarPackageService.js")
 
 const testPackage = {
-    name: "6kW Solar Home System",
+    name: "3kW Solar Home System",
     capacity: 3000, // 6 kW system (higher capacity)
-    batteryStorage: 5, // 10 kWh battery (larger storage for bigger system)
-    inverterCapacity: 2, // 6 kVA inverter
-    panelPowerRating: 200, // Each panel is 200W (lower rating, more panels needed)
+    batteryStorage: 2, // 10 kWh battery (larger storage for bigger system)
+    inverterCapacity: 6, // 6 kVA inverter
+    panelPowerRating: 580, // Each panel is 200W (lower rating, more panels needed)
     Pricing: {
         panelCostPerUnit: 200, // $200 per panel
         batteryCostPerKWh: 150, // $150 per kWh of battery
@@ -55,7 +55,6 @@ async function testDeleteSolarPackage() {
     }
 }
 
-
-//testCreateSolarPackage()
+testCreateSolarPackage()
 //testUpdateSolarPackage()
 //testDeleteSolarPackage()

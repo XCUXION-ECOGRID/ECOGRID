@@ -9,35 +9,43 @@ const commonAppliances = [
 ];
 
 const applianceSupportCal = (solarPackageData) => {
-    const availableEnergy = (solarPackageData.capacity * 5) + solarPackageData.batteryStorage; // kWh (Assuming 5 peak sun hours)
+    const availableEnergy = (solarPackageData.capacity * 5) / 1000 + solarPackageData.batteryStorage; // Convert capacity to kWh and add battery
     let remainingEnergy = availableEnergy;
     let supportedAppliances = [];
 
-    const prioritizedAppliances = commonAppliances.sort((a, b) => a.powerRating - b.powerRating);
+    // Sort appliances by power rating (smallest first)
+    const prioritizedAppliances = [...commonAppliances].sort((a, b) => a.powerRating - b.powerRating);
 
     for (let appliance of prioritizedAppliances) {
         let dailyConsumption = (appliance.powerRating * appliance.usageHours) / 1000; // Convert to kWh
-        let maxCount = Math.floor(remainingEnergy / dailyConsumption)
 
-        if (dailyConsumption <= remainingEnergy && appliance.powerRating <= solarPackageData.inverterCapacity * 1000 && maxCount > 0) {
-            supportedAppliances.push({
-                name: appliance.name,
-                powerRating: appliance.powerRating,
-                usageHours: appliance.usageHours,
-                count: maxCount,  // Ensure the count is added here
-            });
-            remainingEnergy -= maxCount * dailyConsumption
+        // Check if appliance power rating is within inverter capacity
+        if (appliance.powerRating <= solarPackageData.inverterCapacity * 1000) {
+            // Calculate how many of this appliance we can support
+            let maxCount = Math.floor(remainingEnergy / dailyConsumption);
+
+            if (maxCount > 0) {
+                supportedAppliances.push({
+                    name: appliance.name,
+                    powerRating: appliance.powerRating,
+                    usageHours: appliance.usageHours,
+                    count: maxCount
+                });
+
+                // Reduce the remaining energy
+                remainingEnergy -= maxCount * dailyConsumption;
+            }
         }
     }
 
-    return supportedAppliances
-}
+    return supportedAppliances;
+};
 
 const totalEstimatedCost = (solarPackageData, calPanelCount) => {
-    const panelCost = calPanelCount * solarPackageData.Pricing.panelCostPerUnit
-    const batteryCost = solarPackageData.batteryStorage * solarPackageData.Pricing.batteryCostPerKWh
-    const inverterCost = solarPackageData.Pricing.inverterCostPerKW * solarPackageData.inverterCapacity
-    const installationCost = solarPackageData.Pricing.installationCost
+    const panelCost = calPanelCount * solarPackageData.pricing.panelCostPerUnit
+    const batteryCost = solarPackageData.batteryStorage * solarPackageData.pricing.batteryCostPerKWh
+    const inverterCost = solarPackageData.pricing.inverterCostPerKW * solarPackageData.inverterCapacity
+    const installationCost = solarPackageData.pricing.installationCost
 
     return panelCost + batteryCost + inverterCost + installationCost
 
@@ -56,5 +64,6 @@ function totalConsumption(auditData) {
 
     return totalConsumption
 }
+
 
 module.exports = { applianceSupportCal, totalEstimatedCost, totalConsumption }

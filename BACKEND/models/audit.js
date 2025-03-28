@@ -26,7 +26,7 @@ const auditSchema = new mongoose.Schema({
     carbonFootprint: {
         type: Number, // Carbon emissions in kg CO₂
     },
-    recommendation: [String],
+    recommendation: [String], // use ai to suggest energy saving measures
     status: {
         type: String,
         enum: ['pending', 'in progress', 'completed'],

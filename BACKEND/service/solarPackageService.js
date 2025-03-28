@@ -38,7 +38,7 @@ async function createSolarPackage(solarPackageData) {
             }
         )
         await solarPackage.save()
-        console.log(`${solarPackageData.name} is save`)
+        console.log(`${solarPackageData.name} is saved`)
         return solarPackage
     } catch (error) {
         console.log("Solar Package was not created", error.message)
