@@ -18,4 +18,4 @@ const costAnalysisScheme = new mongoose.Schema({
     totalCost: { type: Number },
 })
 
-module.exports = mongoose.model('CostAnalyis', costAnalysisScheme)
+module.exports = mongoose.model('CostAnalysis', costAnalysisScheme)

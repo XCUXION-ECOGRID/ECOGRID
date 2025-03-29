@@ -15,6 +15,7 @@ async function getPricing() {
 async function calCostCustomePackage(userPackage) {
 
     const pricing = await getPricing()
+    console.log("Pricing", pricing)
 
     const { batteryStorage, inverterCapacity, panelCount } = userPackage
 
@@ -23,10 +24,7 @@ async function calCostCustomePackage(userPackage) {
     const inverterCost = inverterCapacity * pricing.inverterCostPerKW;
     const totalCost = panelCost + batteryCost + inverterCost + pricing.installationCost;
 
-    return {
-        totalCost,
-        breakdown: { panelCost, batteryCost, inverterCost, installationCost: pricing.installationCost }
-    }
+    return { totalCost, panelCost, batteryCost, inverterCost, installationCost: pricing.installationCost }
 }
 
 async function estimateCustomCapacity(appliances, panelPowerRating) {
@@ -53,5 +51,5 @@ async function estimateCustomCapacity(appliances, panelPowerRating) {
     return { dailyConsumption, panelCount, batteryStorage, inverterCapacity }
 }
 
-module.exports = { estimateCustomCapacity }
+module.exports = { estimateCustomCapacity, calCostCustomePackage }
 
