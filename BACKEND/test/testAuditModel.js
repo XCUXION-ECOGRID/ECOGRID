@@ -9,8 +9,8 @@ const updateData = {
     ]
 }
 
-/* const auditData = {
-    user: "67da804d5ae65f1d774fc58e", // Replace with an actual ObjectId from your User collection
+const auditData = {
+    user: "67d9e305d7027ab8db6c9e1b", // Replace with an actual ObjectId from your User collection
     auditype: "residential",
     appliances: [
         { name: "Refrigerator", powerRating: 150, usageHours: 24 },
@@ -25,7 +25,7 @@ const updateData = {
         "Consider using solar panels for energy efficiency"
     ]
 }
- */
+
 
 async function testCreateAudit() {
     try {
@@ -33,7 +33,6 @@ async function testCreateAudit() {
 
         const audit = await createAudit(auditData)
 
-        console.log(audit)
     } catch (error) {
         console.log(error.message)
     } finally {
@@ -63,6 +62,6 @@ async function testDeleteAudit() {
     }
 }
 
-//testCreateAudit()
-testUpdateAudit()
+testCreateAudit()
+//testUpdateAudit()
 //testDeleteAudit()

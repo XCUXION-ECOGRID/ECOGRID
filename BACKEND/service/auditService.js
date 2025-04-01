@@ -6,6 +6,7 @@ const ELECTRICITY_TARIFF = 0.12; // $ per kWh (Change based on location)
 const CARBON_EMISSION_FACTOR = 0.92; // kg CO₂ per kWh (Average global value)
 
 async function createAudit(auditData) {
+    //console.log(auditData)
     try {
         if (!auditData.user) {
             console.log("User id required")
@@ -26,8 +27,8 @@ async function createAudit(auditData) {
             carbonFootprint
         })
 
-        await audit.save()
-        return audit
+        const result = await audit.save()
+        return result
     } catch (error) {
         console.log("Error in creating Audit", error.message)
     }
@@ -55,8 +56,9 @@ async function updateAudit(auditID, updateData) {
     audit.estimatedCost = caltotalConsumption * ELECTRICITY_TARIFF
     audit.carbonFootprint = caltotalConsumption * CARBON_EMISSION_FACTOR
 
-    await audit.save()
+    const result = await audit.save()
     console.log(`Updates for ${auditID} saved successfully`)
+    return result
 
 }
 

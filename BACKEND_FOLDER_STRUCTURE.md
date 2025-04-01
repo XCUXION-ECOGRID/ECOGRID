@@ -115,8 +115,6 @@ This is the backend structure for the **Solar Audit App**, a system that facilit
 
 ---
 
-for the Controllers, I divide into the mobile and desktop
-
 ## 📌 Installation
 
 ```sh
