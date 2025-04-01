@@ -69,9 +69,9 @@ async function deleteAudit(auditID) {
             return
         }
 
-        await Audit.deleteOne({ _id: auditID })
-
+        const result = await Audit.deleteOne({ _id: auditID })
         console.log(`Audit with ID ${auditID} deleted`)
+        return result
     } catch (error) {
         console.log("Audit unsuccessfully deleted")
     }

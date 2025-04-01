@@ -1,4 +1,4 @@
-const { createAudit, updateAudit } = require('../service/auditService.js')
+const { createAudit, updateAudit, deleteAudit } = require('../service/auditService.js')
 
 async function createAuditController(req, res) {
     try {
@@ -11,34 +11,58 @@ async function createAuditController(req, res) {
         //console.log(result)
 
         if (!result) {
-            return res.status(500).json({ message: "Create Controller, Failed to save audit" })
+            console.log("Create Controller, Failed to save audit")
+            return
         }
 
         res.status(200).json({ message: "Create Audit successfully" })
     } catch (error) {
-        res.status(500).json({ message: "Failed to implement create audit controller" })
+        res.status(500).json({ message: "Failed to implement create audit controller", errorMesaage: error.message })
     }
 }
 
 async function updateAuditController(req, res) {
     try {
-        const { auditID } = req.params
+        const { id: auditID } = req.params
 
         if (!auditID) {
-            return res.status(500).json({ message: "Audit ID required" })
+            console.log("Audit ID required")
+            return
         }
 
         const result = await updateAudit(auditID, req.body)
 
         if (!result) {
-            return res.status(500).json({ message: "Update Controller, Failed to save audit" })
+            console.log("Update Controller, Failed to update audit")
+            return
         }
 
         res.status(200).json({ message: `Audit ${auditID} updated sucessully` })
 
     } catch (error) {
-
+        res.status(500).json({ message: "Failed to implement update audit controller", errorMesaage: error.message })
     }
 }
 
-module.exports = { createAuditController }
+async function deleteAuditController(req, res) {
+    try {
+        const { id: auditID } = req.params
+
+        if (!auditID) {
+            console.log("Audit ID required")
+            return
+        }
+
+        const result = await deleteAudit(auditID)
+        if (!result) {
+            console.log("Delete Controller, Failed to delete audit")
+            return
+        }
+
+        res.status(200).json({ message: `Audit ${auditID} deleted successfully` })
+    } catch (error) {
+        res.status(500).json({ message: "Failed to implement delete audit controller", errorMesaage: error.message })
+    }
+}
+
+module.exports = { createAuditController, updateAuditController, deleteAuditController }
