@@ -68,9 +68,9 @@ async function updateSolarPackage(SolarPackageID, updateSolarPackageData) {
 
         console.log(solarPackage)
 
-        await solarPackage.save()
+        const newPackage = await solarPackage.save()
         console.log(`Solar Package ${solarPackage.name} updated`)
-
+        return newPackage
     } catch (error) {
         console.log(`Solar Package ${SolarPackageID} was not updated successfully`, error.message)
     }

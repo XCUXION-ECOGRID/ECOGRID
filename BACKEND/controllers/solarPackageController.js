@@ -1,4 +1,4 @@
-const { createSolarPackage } = require("../service/solarPackageService")
+const { createSolarPackage, updateSolarPackage } = require("../service/solarPackageService")
 
 async function createSolarPackageController(req, res) {
     try {
@@ -16,7 +16,31 @@ async function createSolarPackageController(req, res) {
 
         res.status(500).json(
             {
-                message: "Unable to implement solar package controller",
+                message: "Unable to create solar package controller",
+                errorMessage: error.message
+            })
+    }
+}
+
+async function updateSolarPackageController(req, res) {
+    try {
+        const { id: solarPackageID } = req.params
+
+        const result = await updateSolarPackage(solarPackageID, req.body)
+
+        if (!result) {
+            console.log("Failed to update solar package")
+            res.status(500).json({ message: "Failed to update solar package" })
+            return
+        }
+
+        res.status(200).json({ message: "Solar package updated successfully" })
+    } catch (error) {
+        console.error("Error in updateSolarPackageController:", error.message)
+
+        res.status(500).json(
+            {
+                message: "Unable to update solar package controller",
                 errorMessage: error.message
             })
     }
@@ -24,4 +48,4 @@ async function createSolarPackageController(req, res) {
 
 
 
-module.exports = { createSolarPackageController }
+module.exports = { createSolarPackageController, updateSolarPackageController }
