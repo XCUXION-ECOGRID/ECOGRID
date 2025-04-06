@@ -36,29 +36,33 @@ async function createAudit(auditData) {
 
 async function updateAudit(auditID, updateData) {
 
-    if (!mongoose.Types.ObjectId.isValid(auditID)) {
-        console.log("Invalid ObjectId format");
-        return
+    try {
+        if (!mongoose.Types.ObjectId.isValid(auditID)) {
+            console.log("Invalid ObjectId format");
+            return
+        }
+
+        const audit = await Audit.findById(auditID)
+
+        if (!audit) {
+            console.log(`Audit with ID ${auditID} not found`)
+            return
+        }
+        const caltotalConsumption = totalConsumption(updateData)
+
+        //update only provided data
+        Object.assign(audit, updateData)
+
+        audit.energyConsumption = caltotalConsumption
+        audit.estimatedCost = caltotalConsumption * ELECTRICITY_TARIFF
+        audit.carbonFootprint = caltotalConsumption * CARBON_EMISSION_FACTOR
+
+        const result = await audit.save()
+        console.log(`Updates for ${auditID} saved successfully`)
+        return result
+    } catch (error) {
+        console.log(error.message)
     }
-
-    const audit = await Audit.findById(auditID)
-
-    if (!audit) {
-        console.log(`Audit with ID ${auditID} not found`)
-        return
-    }
-    const caltotalConsumption = totalConsumption(updateData)
-
-    //update only provided data
-    Object.assign(audit, updateData)
-
-    audit.energyConsumption = caltotalConsumption
-    audit.estimatedCost = caltotalConsumption * ELECTRICITY_TARIFF
-    audit.carbonFootprint = caltotalConsumption * CARBON_EMISSION_FACTOR
-
-    const result = await audit.save()
-    console.log(`Updates for ${auditID} saved successfully`)
-    return result
 
 }
 

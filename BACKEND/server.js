@@ -1,5 +1,6 @@
 const express = require('express')
-const auditRoute = require('./routes/auditRoute')
+const auditRoute = require('./routes/auditRoute.js')
+const solarPackage = require('./routes/solarPackageRoute.js')
 require('dotenv').config()
 
 const { connectDB } = require('./config/db.js')
@@ -11,7 +12,8 @@ const server = express()
 server.use(express.json())
 
 //base route
-server.use("/api/audit", auditRoute)
+server.use("/api/v1/audit", auditRoute)
+server.use("/api/v1/solarpackage", solarPackage)
 
 const PORT = 5000
 
