@@ -4,6 +4,8 @@ const { calCostCustomePackage } = require("../service/simulationService.js")
 
 async function createCostAnalysis(userData) {
     try {
+        console.log("USER DATA", userData)
+
         const existingUserPackage = await CostAnalysis.findOne({ packageId: userData.packageId })
 
         if (existingUserPackage) {
@@ -15,7 +17,7 @@ async function createCostAnalysis(userData) {
         const userPackage = await UserSolarPackage.findOne({ user: userData.user, name: userData.packageName })
 
         if (!userPackage) {
-            console.log(`UserPackage ${userPackage.name} does not exist`)
+            console.log(`UserPackage ${userData.packageName} does not exist`)
             return
         }
 
@@ -32,11 +34,40 @@ async function createCostAnalysis(userData) {
             totalCost,
         })
 
-        await newCostAnalysis.save()
+        const costAnalysisDoc = await newCostAnalysis.save()
         console.log(`Cost analysis for ${userPackage.name} saved successfully`)
+        return costAnalysisDoc
     } catch (error) {
         console.log("Unable to create cost analysis", error.message)
     }
 }
 
-module.exports = { createCostAnalysis }
+async function getAllCostAnalysis() {
+    try {
+        const costAnalysisDoc = await CostAnalysis.find()
+        if (!costAnalysisDoc) {
+            console.log("No cost analysis found")
+            return
+        }
+        console.log("Cost analysis found")
+        return costAnalysisDoc
+    } catch (error) {
+        console.log("Cost analysis not found", error.message)
+    }
+}
+
+async function getCostAnalysisById(packageId) {
+    try {
+        const costAnalysis = await CostAnalysis.findById({ packageId: packageId })
+        if (!costAnalysis) {
+            console.log("Cost analysis not found")
+            return
+        }
+        console.log("Cost analysis found")
+        return costAnalysis
+    } catch (error) {
+        console.log("Cost analysis not found", error.message)
+    }
+}
+
+module.exports = { createCostAnalysis, getAllCostAnalysis, getCostAnalysisById }
