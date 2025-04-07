@@ -3,9 +3,9 @@ const { connectDB, closeDB } = require('../config/db.js')
 
 
 const userData = {
-    name: "Beast Mensah",
-    email: "mj@gmail.com",
-    password: "qwerty123"
+    "name": "Jordan Edem",
+    "email": "maj@gmail.com",
+    "password": "qwerty123"
 }
 
 async function testCreateUser() {

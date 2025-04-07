@@ -7,7 +7,7 @@ async function createUser({ name, email, password, role }) {
 
         const existingUser = await User.findOne({ email })
 
-        if (existingUser) console.log("User already exist")
+        if (existingUser) return "User already exist"
 
         const hashPassword = await bcrypt.hash(password, saltround)
         const newUser = new User({
@@ -17,8 +17,9 @@ async function createUser({ name, email, password, role }) {
             role: role || 'user'
         })
 
-        return await newUser.save()
-
+        const user = await newUser.save()
+        console.log(`User ${name} created`)
+        return user
     } catch (error) {
         console.log("Error: ", error.message)
     }
@@ -29,9 +30,9 @@ async function getUserByEmail(email) {
         const user = await User.findOne({ email })
 
         if (!user) {
-            console.log("User not found")
+            return "User not found"
         }
-
+        console.log(`user ${user.email} found`)
         return user
     } catch (error) {
         console.log("Error: ", error.message)

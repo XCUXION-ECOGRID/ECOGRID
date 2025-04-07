@@ -3,6 +3,7 @@ const auditRoute = require('./routes/auditRoute.js')
 const solarPackage = require('./routes/solarPackageRoute.js')
 const costAnalysisRoute = require('./routes/costAnalysisRoute.js')
 const userPackageRoute = require('./routes/userPackageRoute.js')
+const userRoute = require('./routes/userRoute.js')
 
 require('dotenv').config()
 
@@ -13,6 +14,9 @@ connectDB()
 const server = express()
 
 server.use(express.json())
+
+//USER ROUTE
+server.use("/users", userRoute)
 
 //base route
 server.use("/api/v1/audit", auditRoute)
