@@ -45,6 +45,20 @@ async function createSolarPackage(solarPackageData) {
     }
 }
 
+async function getAllSolarPackage() {
+    try {
+        const solarPackagesDoc = await SolarPackage.find()
+        if (!solarPackagesDoc) {
+            console.log("No solar packages found")
+            return
+        }
+        console.log("Solar Packages found")
+        return solarPackagesDoc
+    } catch (error) {
+        console.log("Solar packages not found", error.message)
+    }
+}
+
 async function updateSolarPackage(SolarPackageID, updateSolarPackageData) {
     try {
         checkValidID(SolarPackageID)
@@ -88,4 +102,4 @@ async function deletePackage(solarPackageID) {
     }
 }
 
-module.exports = { createSolarPackage, updateSolarPackage, deletePackage }
+module.exports = { createSolarPackage, updateSolarPackage, deletePackage, getAllSolarPackage }
