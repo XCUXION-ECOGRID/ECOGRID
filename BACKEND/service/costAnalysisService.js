@@ -10,7 +10,7 @@ async function createCostAnalysis(userData) {
 
         if (existingUserPackage) {
             console.log(`Cost Analysis for ${userData.packageId} already exist`)
-            return
+            return `Cost Analysis for ${userData.packageId} already exist`
         }
 
         //user must save an existing package before he can save the cost
@@ -22,7 +22,9 @@ async function createCostAnalysis(userData) {
         }
 
         const result = await calCostCustomePackage(userPackage)
+
         console.log(result)
+
         const { totalCost, panelCost, batteryCost, inverterCost, installationCost } = result
 
         const newCostAnalysis = new CostAnalysis({
@@ -56,9 +58,10 @@ async function getAllCostAnalysis() {
     }
 }
 
-async function getCostAnalysisById(packageId) {
+async function getCostAnalysisById(costAnalysisId) {
     try {
-        const costAnalysis = await CostAnalysis.findById({ packageId: packageId })
+        console.log("PACKAGE ID", costAnalysisId)
+        const costAnalysis = await CostAnalysis.findById(costAnalysisId)
         if (!costAnalysis) {
             console.log("Cost analysis not found")
             return
