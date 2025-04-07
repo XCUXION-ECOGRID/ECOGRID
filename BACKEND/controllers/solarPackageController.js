@@ -1,4 +1,4 @@
-const { createSolarPackage, updateSolarPackage } = require("../service/solarPackageService")
+const { createSolarPackage, updateSolarPackage, deletePackage } = require("../service/solarPackageService")
 
 async function createSolarPackageController(req, res) {
     try {
@@ -47,5 +47,28 @@ async function updateSolarPackageController(req, res) {
 }
 
 
+async function deletePackageController(req, res) {
+    try {
+        const { id: solarPackageID } = req.params
+        const result = await deletePackage(solarPackageID)
 
-module.exports = { createSolarPackageController, updateSolarPackageController }
+        if (!result) {
+            console.log("Failed to delete solar package")
+            res.status(500).json({ message: "Failed to delete solar package" })
+            return
+        }
+
+        res.status(200).json({ message: `Solar package ${result.name} deleted successfully` })
+    } catch (error) {
+        console.error("Error in deleteSolarPackageController:", error.message)
+
+        res.status(500).json(
+            {
+                message: "Unable to delete solar package in controller",
+                errorMessage: error.message
+            })
+    }
+}
+
+
+module.exports = { createSolarPackageController, updateSolarPackageController, deletePackageController }

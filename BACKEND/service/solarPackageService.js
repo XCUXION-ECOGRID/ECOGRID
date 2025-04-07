@@ -82,6 +82,7 @@ async function deletePackage(solarPackageID) {
 
         const result = await SolarPackage.findByIdAndDelete(solarPackageID)
         console.log(`Solar package ${result.name} deleted successfully`)
+        return result
     } catch (error) {
         console.log(`Unable to delete Solar Package ${solarPackageID}`, error.message)
     }
