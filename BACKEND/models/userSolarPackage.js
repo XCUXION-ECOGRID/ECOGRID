@@ -8,11 +8,11 @@ const userSolarPackageSchema = new mongoose.Schema({
     },
     name: {
         type: String,
-        required: true
+
     },
     capacity: { //simulate
         type: Number,
-        unique: true
+        required: true
     },
     batteryStorage: {
         type: Number, // kWh battery capacity

@@ -3,12 +3,12 @@ const mongoose = require('mongoose')
 const solarPackageSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     capacity: {
         type: Number,
         required: true,
-        unique: true
     },
     batteryStorage: {
         type: Number, // kWh battery capacity
