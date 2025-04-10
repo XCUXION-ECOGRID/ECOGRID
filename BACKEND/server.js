@@ -4,6 +4,7 @@ const solarPackage = require('./routes/solarPackageRoute.js')
 const costAnalysisRoute = require('./routes/costAnalysisRoute.js')
 const userPackageRoute = require('./routes/userPackageRoute.js')
 const userRoute = require('./routes/userRoute.js')
+const authRoute = require('./routes/authRoutes.js')
 
 require('dotenv').config()
 
@@ -17,6 +18,9 @@ server.use(express.json())
 
 //USER ROUTE
 server.use("/users", userRoute)
+
+//authentication route
+server.use("/api/v1/auth", authRoute)
 
 //base route
 server.use("/api/v1/audit", auditRoute)

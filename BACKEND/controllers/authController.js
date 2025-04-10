@@ -59,3 +59,9 @@ async function loginController(req, res) {
 
     }
 }
+
+module.exports = {
+    createUserController,
+    verifyCodeController,
+    loginController,
+}
