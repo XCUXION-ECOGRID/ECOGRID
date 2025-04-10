@@ -1,4 +1,4 @@
-const { createUser } = require("../service/authService")
+const { createUser, verifyCode } = require("../service/authService")
 
 async function createUserController(req, res) {
     try {

@@ -1,10 +1,10 @@
 const mailer = require('nodemailer');
-require('dotenv').config({ path: '../.env' });
+require('dotenv').config()
 
-const transporter = nodemailer.createTransport({
+const transporter = mailer.createTransport({
     host: process.env.EMAIL_SERVER || "smtp.gmail.com",
     port: Number.parseInt(process.env.EMAIL_PORT || "465"),
-    secure: process.env.EMAIL_SECURE === "true",
+    secure: process.env.EMAIL_SECURE,
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASSWORD,
@@ -20,58 +20,104 @@ const transporter = nodemailer.createTransport({
 
 const generateEmailTemplate = (name, code) => {
     return `
-      <!DOCTYPE html>
-      <html lang="en">
-      <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-        <title>Verification Code</title>
-      </head>
-      <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f7f7f7;">
-        <table align="center" width="100%" cellpadding="0" cellspacing="0" style="padding: 40px 0;">
-          <tr>
-            <td>
-              <table align="center" width="100%" max-width="600px" style="background: #fff; border-radius: 8px; padding: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
-                <tr>
-                  <td align="center" style="padding-bottom: 30px;">
-                   <td> h1 style="font-size: 24px; font-weight: bold; color: #333;">
-                      EcoGrid Energy Audit App
-                  </td>
-                </tr>
-                <tr>
-                  <td align="center" style="font-size: 22px; font-weight: bold; color: #333;">
-                    Verification Code
-                  </td>
-                </tr>
-                <tr>
-                  <td align="center" style="padding: 20px 0; font-size: 16px; color: #555;">
-                    Hi <strong>${name}</strong>,<br><br>
-                    Your verification code is:
-                    <div style="font-size: 32px; font-weight: bold; margin: 20px 0; color: #111;">
-                      ${code}
-                    </div>
-                    This code will expire in 10 minutes.
-                  </td>
-                </tr>
-                <tr>
-                  <td align="center" style="font-size: 14px; color: #888; padding-top: 20px;">
-                    If you didn’t request this, you can safely ignore this email.
-                  </td>
-                </tr>
-                <tr>
-                  <td align="center" style="font-size: 12px; color: #aaa; padding-top: 40px;">
-                    &copy; 2025 BEAST Projects. All rights reserved.<br/>
-                    440 N Barranca Ave #1313, Covina, CA 91723
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-        </table>
-      </body>
-      </html>
-    `;
-};
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Verification Code</title>
+      <style>
+        body {
+          margin: 0 20px;
+          padding: 0;
+          background-color: #f4f6f8;
+          font-family: 'Segoe UI', sans-serif;
+        }
+        .wrapper {
+          width: 100%;
+          padding: 40px 0;
+        }
+        .email-container {
+          max-width: 600px;
+          margin: 0 auto;
+          background-color: #ffffff;
+          border-radius: 8px;
+          box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+          padding: 40px;
+        }
+        .logo {
+          text-align: center;
+          font-size: 28px;
+          font-weight: bold;
+          color: #2e7d32;
+          margin-bottom: 30px;
+        }
+        .title {
+          font-size: 20px;
+          color: #222;
+          font-weight: bold;
+          text-align: center;
+        }
+        .content {
+          font-size: 16px;
+          color: #555;
+          text-align: center;
+          padding: 20px 0;
+          line-height: 1.6;
+        }
+        .code {
+          font-size: 32px;
+          color: #000;
+          font-weight: bold;
+          margin: 20px 0;
+          background-color: #f0f0f0;
+          display: inline-block;
+          padding: 10px 20px;
+          border-radius: 6px;
+        }
+        .button-container {
+          text-align: center;
+          margin-top: 30px;
+        }
+        .footer {
+          text-align: center;
+          font-size: 14px;
+          color: #888;
+          margin-top: 40px;
+        }
+        .small-footer {
+          font-size: 12px;
+          color: #aaa;
+          text-align: center;
+          margin-top: 20px;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="wrapper">
+        <div class="email-container">
+          <div class="logo">EcoGrid</div>
+          <div class="title">Login Verification Code</div>
+          <div class="content">
+            Hi <strong>${name}</strong>,<br/><br/>
+            Please use the verification code below to complete your login.<br/>
+            This code will expire in <strong>10 minutes</strong>.
+            <div class="code">${code}</div>
+          </div>
+          <div class="footer">
+            If you didn't request this code, you can safely ignore this email.
+          </div>
+          <div class="small-footer">
+            &copy; 2025 BEAST Projects. All rights reserved.<br/>
+            440 N Barranca Ave #1313, Covina, CA 91723
+          </div>
+        </div>
+      </div>
+    </body>
+    </html>
+    `
+}
+
 
 const sendEmail = async (to, code, name) => {
     const html = generateEmailTemplate(name, code)
@@ -84,8 +130,9 @@ const sendEmail = async (to, code, name) => {
     }
 
     try {
-        await transporter.sendMail(mailOptions);
+        const info = await transporter.sendMail(mailOptions)
         console.log('Email sent to', to);
+        return info
     } catch (error) {
         console.error('Error sending email:', error.message);
         throw new Error('Failed to send email');

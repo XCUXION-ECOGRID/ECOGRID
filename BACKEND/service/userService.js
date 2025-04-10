@@ -26,4 +26,4 @@ async function deleteUserByEmail(email) {
     }
 }
 
-module.exports = { createUser, getUserByEmail, deleteUserByEmail }
+module.exports = { getUserByEmail, deleteUserByEmail }

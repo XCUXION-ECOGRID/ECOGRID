@@ -6,7 +6,7 @@ const { sendEmail } = require('../config/mailer.js')
 require('dotenv').config({ path: '../.env' })
 const jwt = require('jsonwebtoken')
 
-async function createUser({ name, email, password, role }) {
+async function createUser({ name, email, password, phone, role }) {
     const saltround = 10
     try {
 
@@ -31,15 +31,23 @@ async function createUser({ name, email, password, role }) {
 
         const user = await newUser.save()
 
-        await VerificationCode.create({
+        if (!user) return "Failed to create user"
+        console.log(`User ${name} created`)
+
+        const verificationCodeResult = await VerificationCode.create({
             user: user._id,
             code: verificationCode,
             expiryAt: codeExpiryAt,
         })
 
-        await sendEmail(email, verificationCode)
-        console.log(`User ${name} created`)
-        return user
+        if (!verificationCodeResult) return "Failed to create verification code"
+        console.log(`Verification code ${verificationCode} created for user ${name}`)
+
+        const sendEmailResult = await sendEmail(email, verificationCode, name)
+        if (!sendEmailResult) return "Failed to send verification email"
+        console.log("Verification code sent to email")
+
+        return { message: "User created successfully", user, sendEmailResult }
     } catch (error) {
         console.log("Error: ", error.message)
     }
