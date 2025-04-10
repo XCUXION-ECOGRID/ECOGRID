@@ -23,10 +23,6 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: false,
     },
-    verificationCode: {
-        type: String,
-        required: true,
-    },
     password: {
         type: String,
         required: true,

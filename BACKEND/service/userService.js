@@ -1,29 +1,6 @@
 const User = require('../models/users.js')
 const bcrypt = require('bcrypt')
 
-async function createUser({ name, email, password, role }) {
-    const saltround = 10
-    try {
-
-        const existingUser = await User.findOne({ email })
-
-        if (existingUser) return "User already exist"
-
-        const hashPassword = await bcrypt.hash(password, saltround)
-        const newUser = new User({
-            name,
-            email,
-            password: hashPassword,
-            role: role || 'user'
-        })
-
-        const user = await newUser.save()
-        console.log(`User ${name} created`)
-        return user
-    } catch (error) {
-        console.log("Error: ", error.message)
-    }
-}
 
 async function getUserByEmail(email) {
     try {

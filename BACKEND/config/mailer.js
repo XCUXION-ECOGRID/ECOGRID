@@ -9,12 +9,19 @@ const transporter = mailer.createTransport({
     },
 })
 
-const sendEmail = async (to, subject, html) => {
+const sendEmail = async (to, code) => {
     const mailOptions = {
         from: `EcoGrid <${process.env.EMAIL_USERNAME}>`,
         to,
-        subject,
-        html,
+        subject: "Verify your email - EcoGrid",
+        html: `
+                <div>
+                    <h2>Welcome to the Energy Audit App!</h2>
+                    <p>Your verification code is:</p>
+                    <h1>${code}</h1>
+                    <p>This code is valid for 15 minutes. Please use it to verify your account.</p>
+                </div>
+                 `,
     }
 
     try {
@@ -26,4 +33,4 @@ const sendEmail = async (to, subject, html) => {
     }
 }
 
-module.exports = sendEmail
+module.exports = { sendEmail }
