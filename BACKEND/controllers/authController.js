@@ -2,9 +2,9 @@ const { createUser, verifyCode, loginUser } = require("../service/authService")
 
 async function createUserController(req, res) {
     try {
-        const { name, email, password, phone } = req.body
+        const { name, email, password, phone, role } = req.body
 
-        const result = await createUser({ name, email, password, phone })
+        const result = await createUser({ name, email, password, phone, role })
 
         if (typeof result === "string") {
             return res.status(400).json({ message: result }) // User already exist

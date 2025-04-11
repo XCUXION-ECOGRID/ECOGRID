@@ -1,9 +1,12 @@
 const express = require('express')
-const { createUserController, getUserByEmailController, deleteUserByEmailController } = require('../controllers/userController')
-const Router = express.Router()
+const { getAllUsersController, getUserByEmailController, deleteUserByEmailController, updateUserByEmailController } = require('../controllers/userController')
+const router = express.Router()
 
-Router.post('/register', createUserController)
-Router.get('/', getUserByEmailController)
-Router.delete('/', deleteUserByEmailController)
+const { authMiddleware, isAdmin } = require('../middleware/auth')
 
-module.exports = Router
+router.get('/all', authMiddleware, isAdmin, getAllUsersController)
+router.get('/', authMiddleware, isAdmin, getUserByEmailController)
+router.delete('/delete', authMiddleware, isAdmin, deleteUserByEmailController)
+router.put('/update', authMiddleware, isAdmin, updateUserByEmailController)
+
+module.exports = router

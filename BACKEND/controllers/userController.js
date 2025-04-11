@@ -1,17 +1,12 @@
-const { createUser, getUserByEmail, deleteUserByEmail } = require("../service/userService")
+const { getAllUsers, getUserByEmail, deleteUserByEmail, updateUserByEmail } = require("../service/userService")
 
-async function createUserController(req, res) {
-    const { name, email, password, role } = req.body
+async function getAllUsersController(req, res) {
     try {
-        const user = await createUser({ name, email, password, role })
-        if (!user) {
-            return res.status(400).json({ message: "User not created" })
-        }
-        res.status(201).json({ message: "User created successfully", user })
+        const users = await getAllUsers()
+        res.status(200).json({ message: "Users fetched successfully", users })
     } catch (error) {
         res.status(500).json({ message: error.message })
     }
-
 }
 
 async function getUserByEmailController(req, res) {
@@ -27,6 +22,17 @@ async function getUserByEmailController(req, res) {
     }
 }
 
+async function updateUserByEmailController(req, res) {
+    const { email, updateData } = req.body
+
+    try {
+        const result = await updateUserByEmail(email, updateData)
+        res.status(200).json({ message: "updated successfully", result })
+    } catch (error) {
+        res.status(500).json({ message: error.message })
+    }
+}
+
 async function deleteUserByEmailController(req, res) {
     const { email } = req.body
     try {
@@ -37,4 +43,4 @@ async function deleteUserByEmailController(req, res) {
     }
 }
 
-module.exports = { createUserController, getUserByEmailController, deleteUserByEmailController }
+module.exports = { getAllUsersController, getUserByEmailController, deleteUserByEmailController, updateUserByEmailController }

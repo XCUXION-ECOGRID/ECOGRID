@@ -17,7 +17,7 @@ const server = express()
 server.use(express.json())
 
 //USER ROUTE
-server.use("/users", userRoute)
+server.use("/api/v1/users", userRoute)
 
 //authentication route
 server.use("/api/v1/auth", authRoute)

@@ -1,6 +1,14 @@
 const User = require('../models/users.js')
 const bcrypt = require('bcrypt')
 
+async function getAllUsers() {
+    try {
+        const users = await User.find()
+        return users
+    } catch (error) {
+        console.log("Error: ", error.message)
+    }
+}
 
 async function getUserByEmail(email) {
     try {
@@ -16,6 +24,16 @@ async function getUserByEmail(email) {
     }
 }
 
+async function updateUserByEmail(email, updateData) {
+    try {
+        const result = await User.updateOne({ email }, { $set: updateData })
+        console.log(`User ${email} updated`)
+        return result
+    } catch (error) {
+        console.log("Error: ", error.message)
+    }
+}
+
 async function deleteUserByEmail(email) {
     try {
 
@@ -26,4 +44,4 @@ async function deleteUserByEmail(email) {
     }
 }
 
-module.exports = { getUserByEmail, deleteUserByEmail }
+module.exports = { getAllUsers, getUserByEmail, deleteUserByEmail, updateUserByEmail }
