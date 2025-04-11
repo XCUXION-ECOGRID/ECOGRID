@@ -1,4 +1,4 @@
-const { createUser, verifyCode } = require("../service/authService")
+const { createUser, verifyCode, loginUser } = require("../service/authService")
 
 async function createUserController(req, res) {
     try {
@@ -45,7 +45,7 @@ async function verifyCodeController(req, res) {
 async function loginController(req, res) {
     const { email, password } = req.body
     try {
-        const result = await login({ email, password })
+        const result = await loginUser({ email, password })
         if (typeof result === "string") {
             return res.status(400).json({ message: result }) // User not found or already verified
         }
