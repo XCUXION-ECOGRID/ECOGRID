@@ -6,7 +6,7 @@ const { sendEmail } = require('../config/mailer.js')
 require('dotenv').config({ path: '../.env' })
 const jwt = require('jsonwebtoken')
 
-async function createUser({ name, email, password, phone, role }) {
+async function createUser({ name, email, password, phone }) {
     const saltround = 10
     try {
 
@@ -25,7 +25,6 @@ async function createUser({ name, email, password, phone, role }) {
             email,
             phone,
             password: hashPassword,
-            role: role || 'user',
             isVerified: false,
         })
 
