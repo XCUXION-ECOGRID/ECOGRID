@@ -27,10 +27,15 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    role: {
+        type: String,
+        enum: ['admin', 'user', 'homeUser'],
+        default: 'user',
+    },
 },
     {
         timestamps: true,
-        discriminatorKey: 'role'
+
     })
 
 module.exports = mongoose.model('User', userSchema)

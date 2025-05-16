@@ -1,8 +1,11 @@
 const HomeUserService = require("../service/houseUserService.js")
 
 async function createhomeUserController(req, res) {
+
+    const { id: homerUserId } = req.params
+
     try {
-        const result = HomeUserService.houseUserService(req.params.houserUserId, req.body)
+        const result = HomeUserService.createHouseUser(homerUserId, req.body)
 
         if (result === "Failed to update home user") {
             return res.status(400).json({ message: result })

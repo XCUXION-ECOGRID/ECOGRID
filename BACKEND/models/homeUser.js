@@ -1,7 +1,12 @@
 const mongoose = require('mongoose')
-const Users = require('./users')
+
 
 const homeUserSchema = new mongoose.Schema({
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
+    },
     cart: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'SolarPackage',
@@ -20,4 +25,4 @@ const homeUserSchema = new mongoose.Schema({
     }],
 }, { timestamps: true })
 
-module.exports = Users.discriminator('HomeUser', homeUserSchema)
+module.exports = mongoose.model('HomeUser', homeUserSchema)
