@@ -44,4 +44,35 @@ async function deleteUserByEmail(email) {
     }
 }
 
-module.exports = { getAllUsers, getUserByEmail, deleteUserByEmail, updateUserByEmail }
+async function forgotPassword(email){
+    try {
+        const existingUser = await User.findOne({email});
+        
+        console.log(`user ${existingUser.email} `);
+        return existingUser;
+    } catch (error) {
+        console.log("Error cause by: ", error);
+    }
+}
+
+async function verifyForgotPasswordCode(email, forgotPasswordCode){
+    try {
+        const existingUser = await User.findOne({email}).select('+forgotPasswordCode +forgotPasswordCodeValidation ');
+        return existingUser;
+ 
+    } catch (error) {
+        console.log("Error caused by: ", error);
+    }
+}
+
+async function setNewPassword(email){
+    try {
+        const existingUser = await User.findOne({email}).select('+forgotPasswordCode +forgotPasswordCodeValidation ');
+        return existingUser;
+ 
+    } catch (error) {
+        console.log("Error caused by: ", error);
+    }
+}
+
+module.exports = { getAllUsers, getUserByEmail, deleteUserByEmail, updateUserByEmail, forgotPassword, verifyForgotPasswordCode, setNewPassword }
