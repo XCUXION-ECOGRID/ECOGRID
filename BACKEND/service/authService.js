@@ -2,7 +2,7 @@ const User = require('../models/users.js')
 const VerificationCode = require('../models/verificationCode.js')
 const bcrypt = require('bcrypt')
 const { generateVerificationCode } = require('../utils/geneateCode.js')
-const { sendEmail } = require('../config/mailer.js')
+const { sendEmail} = require('../config/mailer.js')
 require('dotenv').config({ path: '../.env' })
 const jwt = require('jsonwebtoken')
 
@@ -52,6 +52,34 @@ async function createUser({ name, email, password, phone, role }) {
         console.log("Error: ", error.message)
     }
 }
+
+async function resendVerificationCode({email}){
+    const existingUser = await User.findOne({email});
+
+    if(existingUser.isVerified) return "User is already verified"
+    
+    //generate verification code 
+    const verificationCode = generateVerificationCode();
+    const codeExpiryAt = new Date(Date.now()  + 10 * 60 * 1000);
+
+    //setting the verification code for the user
+    const verificationCodeGenerated = await VerificationCode.create({
+        user: existingUser._id,
+        code: verificationCode,
+        expiryAt: codeExpiryAt
+    });
+
+    // if verification code cannot be stored
+    if(!verificationCodeGenerated) return "Failed to generate verification code"
+
+    // send email containing the code
+    const emailMessage = await sendEmail(email, verificationCode, existingUser.name);
+    if(!emailMessage) return "Failed to send verification code"
+
+    return {message: 'Code sent successfully'}
+
+}
+
 
 async function verifyCode({ email, code }) {
     try {
@@ -116,4 +144,6 @@ async function loginUser({ email, password }) {
     }
 }
 
-module.exports = { createUser, verifyCode, loginUser }
+
+
+module.exports = { createUser, resendVerificationCode ,verifyCode, loginUser }
