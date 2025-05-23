@@ -27,11 +27,25 @@ async function getUserByEmail(email) {
     }
 }
 
-async function updateUserByEmail(email, updateData) {
+async function getPersonalData(req){  
+    const user = await User.findById(req.user.id);
+    if(!user){
+        return 'User not found';
+    }
+    return user
+}
+
+async function updateUserByEmail(req, email, updateData) {
     try {
         if(!email){
             return "please ensure your email is provided"
         }
+
+        // logged in user can only update his account 
+        if(email !== req.user.email){
+            return 'You can only update your data. Verify the email'
+        }
+
         //make sure updateData must be an object
         if(!updateData || typeof updateData !== 'object' || Object.keys(updateData).length === 0){
             return 'fields to be updated must be non-empty'
@@ -82,13 +96,21 @@ async function updateUserByEmail(email, updateData) {
     }
 }
 
-async function deleteUserByEmail(email) {
+async function deleteData(req) {
     try {
+        // email of logged in user
+        const email = req.user.email
+    
+        const deletedUser = await User.deleteOne({email});
 
-        await User.deleteOne({ email })
-        console.log(`User ${email} deleted`)
+        if(!deletedUser.deletedCount){
+            return 'User account already deleted'
+        }
+        return deletedUser;
+        
     } catch (error) {
-        console.log(error.message)
+        console.log(error.message);
+        throw Error
     }
 }
 
@@ -123,4 +145,13 @@ async function setNewPassword(email){
     }
 }
 
-module.exports = { getAllUsers, getUserByEmail, deleteUserByEmail, updateUserByEmail, forgotPassword, verifyForgotPasswordCode, setNewPassword }
+module.exports = { 
+    getAllUsers, 
+    getUserByEmail,
+    deleteData, 
+    updateUserByEmail, 
+    forgotPassword, 
+    verifyForgotPasswordCode, 
+    setNewPassword,
+    getPersonalData
+ }
