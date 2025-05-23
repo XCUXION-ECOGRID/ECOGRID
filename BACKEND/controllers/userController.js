@@ -32,6 +32,9 @@ async function updateUserByEmailController(req, res) {
 
     try {
         const result = await updateUserByEmail(email, updateData)
+        if (typeof result === 'string'){
+            return res.status(400).json({message: result})
+        }
         res.status(200).json({ message: "updated successfully", result })
     } catch (error) {
         res.status(500).json({ message: error.message })
@@ -75,7 +78,7 @@ async function forgotPasswordController(req, res) {
 
             return res.status(200).json({
                 success: true,
-                message: 'A six digit code has been sent to you mail'
+                message: 'A six character code has been sent to you mail'
             })
         }
 
