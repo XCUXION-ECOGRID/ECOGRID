@@ -58,18 +58,18 @@ async function updateUserByEmail(email, updateData) {
             return 'Only name and phone number can be updated'
         }
 
-        // updateOne ensures that only the metadata (matchedCount, modifiedCount)
-        const updatedUser = await User.updateOne({email},
+        // findOneAndUpdate ensures the user's data is returned after update
+        const updatedUser = await User.findOneAndUpdate({email},
             {$set: updateData},
-            { runValidators: true} // ensure update does not violate schema rules for phone number
+            {
+                new: true, // return the updated document
+                runValidators: true, //ensure update does not violate schema rules for phone and name
+                select: 'email name phone' // return only specific fields
+            } 
         )
 
-        //verify update using .matchedCount and .modifiedCount because of updateOne 
-        if(updatedUser.matchedCount === 0){
-            return 'User not found '
-        }
-        if(updatedUser.modifiedCount === 0){
-            return 'User data failed to be updated'
+        if (!updatedUser){
+            return 'Failed to update user, user not found'
         }
 
         return updateData
