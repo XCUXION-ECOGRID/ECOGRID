@@ -4,7 +4,7 @@ const User = require("../models/users")
 async function createHouseUser(houserUserId, userData) {
     try {
 
-        const { role, cart, wishlist, customePackages, orders } = userData
+        const { role } = userData
 
         // if (cart || wishlist || customePackages || orders) {
         //     const updateHomeUser = await HomeUser.findByIdAndUpdate(houserUserId, {

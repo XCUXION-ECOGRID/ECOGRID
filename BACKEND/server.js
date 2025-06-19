@@ -6,6 +6,7 @@ const userPackageRoute = require('./routes/userPackageRoute.js')
 const userRoute = require('./routes/userRoute.js')
 const authRoute = require('./routes/authRoutes.js')
 const homeUserRoute = require('./routes/homeUserRoute.js')
+const companyRepRoute = require('./routes/companyRepRoute.js')
 
 require('dotenv').config()
 
@@ -20,6 +21,7 @@ server.use(express.json())
 //USER ROUTE
 server.use("/api/v1/users", userRoute)
 server.use("/api/v1/users", homeUserRoute)
+server.use("/api/v1/users", companyRepRoute)
 
 //authentication route
 server.use("/api/v1/auth", authRoute)
