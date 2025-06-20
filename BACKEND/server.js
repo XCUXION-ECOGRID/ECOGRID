@@ -19,7 +19,6 @@ server.use(express.json())
 
 //USER ROUTE
 server.use("/api/v1/users", userRoute)
-
 //authentication route
 server.use("/api/v1/auth", authRoute)
 
