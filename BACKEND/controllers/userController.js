@@ -1,7 +1,7 @@
 const { hmacProcess } = require("../config/hmac");
 const bcrypt = require('bcrypt');
 const { sendEmail, sendForgotPasswordMail } = require("../config/mailer")
-const { getAllUsers, getUserByEmail, deleteUserByEmail, updateUserByEmail, forgotPassword, verifyForgotPassword, verifyForgotPasswordCode, setNewPassword } = require("../service/userService")
+const { getAllUsers, getUserByEmail, deleteData, updateUserByEmail, forgotPassword,  verifyForgotPasswordCode, setNewPassword, getPersonalData,  } = require("../service/userService")
 const generateForgotPasswordCode = require("../utils/forgotPasswordCode")
 
 
@@ -27,11 +27,25 @@ async function getUserByEmailController(req, res) {
     }
 }
 
+async function getPersonalDataController(req, res) {
+    try {
+        const result = await getPersonalData(req); // pass request to get personal data
+
+        if (typeof result === 'string'){
+            return res.status(404).json({message: result});
+        }
+        return res.status(200).json({data: result})
+    } catch (error) {
+        console.log('Error caused by: ', error);
+        return res.status(500).json({message: 'Internal server error while retrieving personal data'});
+    }
+}
+
 async function updateUserByEmailController(req, res) {
     const { email, updateData } = req.body
 
     try {
-        const result = await updateUserByEmail(email, updateData)
+        const result = await updateUserByEmail(req, email, updateData)
         if (typeof result === 'string'){
             return res.status(400).json({message: result})
         }
@@ -41,11 +55,14 @@ async function updateUserByEmailController(req, res) {
     }
 }
 
-async function deleteUserByEmailController(req, res) {
-    const { email } = req.body
+async function deleteDataController(req, res) {
     try {
-        await deleteUserByEmail(email)
-        res.status(200).json({ message: "User deleted successfully" })
+        const result = await deleteData(req);
+
+        if(typeof result === 'string'){
+            return res.status(400).json({message: result})
+        }
+        return res.status(200).json({ message: "User deleted successfully"})
     } catch (error) {
         res.status(500).json({ message: error.message })
     }
@@ -98,25 +115,16 @@ async function verifyForgotPasswordCodeController(req, res) {
         const existingUser = await verifyForgotPasswordCode(email, forgotPasswordCode);
 
         if(!existingUser){
-            return res.status(400).json({
-                success: false,
-                message: "User not found"
-            })
+            return res.status(400).json({ success: false, message: "User not found"})
         }
 
         if(!existingUser.forgotPasswordCode && !existingUser.forgotPasswordCodeValidation){
-            return res.status(400).json({
-                success: false,
-                message: "Forgot Password code has already been used"
-            })
+            return res.status(400).json({success: false,message: "Forgot Password code has already been used"})
         }
 
         if(!existingUser.forgotPasswordCode || !existingUser.forgotPasswordCodeValidation){
-            return res.status(400).json({
-                success: false,
-                message: "Forgot Password code is invalid"
-            })
-            
+            return res.status(400).json({success: false,message: "Forgot Password code is invalid"
+            })  
         }
 
         if(Date.now() > existingUser.forgotPasswordCodeValidation){
@@ -130,16 +138,11 @@ async function verifyForgotPasswordCodeController(req, res) {
             existingUser.forgotPasswordCodeValidation = undefined;
 
             await existingUser.save();
-            return res.status(200).json({
-                success: true,
-                message: 'Code is valid'
+            return res.status(200).json({success: true, message: 'Code is valid'
             })
         }
 
-        return res.status(401).json({
-            success: false, 
-            message: 'Code is invalid, failed to update password'
-        })
+        return res.status(401).json({success: false,  message: 'Code is invalid, failed to update password'})
     } catch (error) {
         console.log('Error caused by: ', error);
         return res.status(500).json({
@@ -189,4 +192,13 @@ async function setNewPasswordController(req, res) {
     }
 }
 
-module.exports = { getAllUsersController, getUserByEmailController, deleteUserByEmailController, updateUserByEmailController, forgotPasswordController, verifyForgotPasswordCodeController, setNewPasswordController }
+module.exports = { 
+    getAllUsersController, 
+    getUserByEmailController, 
+    deleteDataController, 
+    updateUserByEmailController, 
+    forgotPasswordController, 
+    verifyForgotPasswordCodeController, 
+    setNewPasswordController,
+    getPersonalDataController
+}

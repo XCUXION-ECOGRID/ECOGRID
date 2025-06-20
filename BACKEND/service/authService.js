@@ -130,7 +130,7 @@ async function loginUser({ email, password }) {
         if (!isPasswordCorrect) return "Incorrect password"
 
         const token = jwt.sign(
-            { UserId: existingUser._id, role: existingUser.role },
+            { userId: existingUser._id, email:existingUser.email , role: existingUser.role },
             process.env.JWT_SECRET,
             { expiresIn: '1h' }
         )
@@ -138,9 +138,13 @@ async function loginUser({ email, password }) {
         return {
             message: "User logged in successfully",
             token,
+            userId: existingUser._id,
+            role: existingUser.role
+
         }
     } catch (error) {
-        console.log("Error: ", error.message)
+        console.log("Error caused by: ", error.message);
+        throw error;
     }
 }
 
