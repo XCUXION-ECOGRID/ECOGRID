@@ -1,4 +1,4 @@
-const { createUser, verifyCode, loginUser } = require("../service/authService")
+const { createUser, verifyCode, loginUser, resendVerificationCode } = require("../service/authService")
 
 async function createUserController(req, res) {
     try {
@@ -18,6 +18,38 @@ async function createUserController(req, res) {
     } catch (error) {
         console.log("Error: ", error.message)
         res.status(500).json({ message: "Internal Server Error" })
+    }
+}
+
+async function resendVerificationCodeController(req, res) {
+    const {email} = req.body;
+    try {
+        const result = await resendVerificationCode({email});
+
+        if(typeof result === 'string'){
+            return res.status(400).json({
+                success: false,
+                message: result
+            })
+        }
+        
+        if(!result){
+            return res.status(500).json({
+                success: false,
+                message: 'Failed to resend verification code'
+            })
+        }
+
+        return res.status(200).json({
+            success: true,
+            result
+        })
+    } catch (error) {
+        console.log('Error caused by: ', error);
+        return res.status(500).json({
+            success: false,
+            message: 'Internal server error while resending verification code'
+        })
     }
 }
 
@@ -62,6 +94,7 @@ async function loginController(req, res) {
 
 module.exports = {
     createUserController,
+    resendVerificationCodeController,
     verifyCodeController,
     loginController,
 }

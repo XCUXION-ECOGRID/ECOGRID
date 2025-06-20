@@ -29,8 +29,16 @@ const userSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        enum: ['admin', 'user', 'homeUser'],
-        default: 'user',
+        enum: ['user', 'admin'],
+        default: 'user'
+    },
+    forgotPasswordCode: {
+        type: String,
+        select: false,
+    },
+    forgotPasswordCodeValidation: {
+        type: Number,
+        select: false
     },
 },
     {
