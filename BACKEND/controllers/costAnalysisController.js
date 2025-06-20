@@ -24,7 +24,7 @@ async function getAllCostAnalysisController(req, res) {
             return res.status(404).json({ message: "Cost analysis not found" })
         }
 
-        res.status(200).json({ message: "Cost analysis found", data: result })
+        return res.status(200).json({ message: "Cost analysis found", data: result })
     } catch (error) {
         console.log("Unable to get cost analysis", error.message)
         res.status(500).json({ message: "Unable to get cost analysis" })

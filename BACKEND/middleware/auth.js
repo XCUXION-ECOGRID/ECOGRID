@@ -9,7 +9,6 @@ function authMiddleware(req, res, next) {
 
     const token = authheader.split(' ')[1]
 
-
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET)
         req.user = decoded
@@ -20,7 +19,7 @@ function authMiddleware(req, res, next) {
 }
 
 function isAdmin(req, res, next) {
-    if (req.user?.role === "admin") return res.status(403).json({ message: "Access denied" })
+    if (req.user?.role !== "admin") return res.status(403).json({ message: "Access denied" })
     next()
 }
 

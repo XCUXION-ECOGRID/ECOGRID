@@ -32,6 +32,14 @@ const userSchema = new mongoose.Schema({
         enum: ['user', 'admin'],
         default: 'user'
     },
+    forgotPasswordCode: {
+        type: String,
+        select: false,
+    },
+    forgotPasswordCodeValidation: {
+        type: Number,
+        select: false
+    },
 }, { timestamps: true })
 
 module.exports = mongoose.model('User', userSchema)
