@@ -8,7 +8,7 @@ const router = express.Router()
  * /api/v1/audit/create:
  *   post:
  *     summary: Create a new audit
- *     tags: [Audit]
+ *     tags: [Energy Audit]
  *     requestBody:
  *       required: true
  *       content:
@@ -47,7 +47,7 @@ const router = express.Router()
  * /api/v1/audit/update/{id}:
  *   put:
  *     summary: Update an existing audit
- *     tags: [Audit]
+ *     tags: [Energy Audit]
  *     parameters:
  *       - in: path
  *         name: id
@@ -76,7 +76,7 @@ const router = express.Router()
  * /api/v1/audit/delete/{id}:
  *   delete:
  *     summary: Delete an audit
- *     tags: [Audit]
+ *     tags: [Energy Audit]
  *     parameters:
  *       - in: path
  *         name: id
