@@ -7,6 +7,9 @@ const userRoute = require('./routes/userRoute.js')
 const authRoute = require('./routes/authRoutes.js')
 const companyBranch = require('./routes/companyBranchRoutes.js')
 
+const swaggerjsdoc = require("swagger-jsdoc")
+const swaggerui = require("swagger-ui-express")
+
 require('dotenv').config()
 
 const { connectDB } = require('./config/db.js')
@@ -30,6 +33,45 @@ server.use("/api/v1/audit", auditRoute)
 server.use("/api/v1/solarpackage", solarPackage)
 server.use("/api/v1/cost-analysis", costAnalysisRoute)
 server.use("/api/v1/user-package", userPackageRoute)
+
+const options = {
+    definition: {
+        openapi: "3.0.0",
+        info: {
+            title: "ECOGRID - Solar Energy Management API",
+            version: "1.0.0",
+            description: "API for managing solar energy packages, user data, and cost analysis. This API allows users to view solar packages, manage their accounts, and perform cost analysis for solar energy solutions and energy audits. It also includes endpoints for user authentication and company branch management.",
+        },
+        servers: [
+            {
+                url: "http://localhost:5000",
+            },
+        ],
+        components: {
+            securitySchemes: {
+                bearerAuth: {
+                    type: "http",
+                    scheme: "bearer",
+                    bearerFormat: "JWT",
+                }
+            }
+        },
+        security: [
+            {
+                bearerAuth: [],
+            },
+        ], // Path to the API docs
+    },
+    apis: ["./routes/*.js", "./controllers/*.js"],
+}
+
+const spacs = swaggerjsdoc(options)
+
+server.use(
+    "/api/v1/docs",
+    swaggerui.serve,
+    swaggerui.setup(spacs)
+)
 
 const PORT = 5000
 
