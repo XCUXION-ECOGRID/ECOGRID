@@ -10,6 +10,8 @@ const companyBranch = require('./routes/companyBranchRoutes.js')
 const swaggerjsdoc = require("swagger-jsdoc")
 const swaggerui = require("swagger-ui-express")
 
+const cors = require('cors')
+
 require('dotenv').config()
 
 const { connectDB } = require('./config/db.js')
@@ -19,6 +21,8 @@ connectDB()
 const server = express()
 
 server.use(express.json())
+
+server.use(cors())
 
 //USER ROUTE
 server.use("/api/v1/users", userRoute)
@@ -44,7 +48,7 @@ const options = {
         },
         servers: [
             {
-                url: "http://localhost:5000",
+                url: "https://ecogrid-1.onrender.com",
             },
         ],
         components: {
@@ -73,7 +77,7 @@ server.use(
     swaggerui.setup(spacs)
 )
 
-const PORT = 5000
+const PORT = process.env.PORT || 5000
 
 server.listen(PORT, () => console.log(`Server running on PORT ${PORT}`))
 
