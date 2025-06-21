@@ -38,7 +38,7 @@ const solarPackageSchema = new mongoose.Schema({
         minEnergyConsumption: Number, // Minimum required energy consumption to recommend this package
         maxEnergyConsumption: Number  // Maximum consumption it can handle
     },
-    pricing: { // Pricing added by the admin
+    pricing: { // Pricing added by the company rep
         panelCostPerUnit: { type: Number, required: true },  // Cost per solar panel
         batteryCostPerKWh: { type: Number, required: true }, // Cost per kWh of battery storage
         inverterCostPerKW: { type: Number, required: true }, // Cost per kW of inverter
