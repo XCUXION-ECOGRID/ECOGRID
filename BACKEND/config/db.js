@@ -5,9 +5,12 @@ async function connectDB() {
     try {
         console.log("Connecting to Database")
 
-        await mongoose.connect(process.env.MONGO_URI)
+        await mongoose.connect(process.env.MONGO_URI, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+        })
 
-        const collections = await mongoose.connection.db.listCollections().toArray()
+        // const collections = await mongoose.connection.db.listCollections().toArray()
 
         console.log("Database Connection sucessful")
 
